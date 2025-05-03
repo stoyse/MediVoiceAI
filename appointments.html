@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termine - MediTrack</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Mobile Navigation Toggle -->
+    <div class="lg:hidden flex items-center justify-between p-4 bg-white shadow-md">
+      <div class="flex items-center">
+        <i class="fas fa-stethoscope text-primary-600 text-xl mr-2"></i>
+        <span class="font-bold text-xl text-primary-700">MediVoiceAI</span>
+      </div>
+      <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="hidden lg:block lg:w-64 bg-white shadow-lg transform lg:transform-none transition-transform duration-300 ease-in-out lg:relative fixed inset-0 z-40">
+      <div class="flex items-center p-6 border-b">
+        <i class="fas fa-stethoscope text-primary-600 text-2xl mr-3"></i>
+        <div class="text-xl font-bold text-primary-700">MediVoiceAI</div>
+        <button id="close-sidebar" class="ml-auto p-2 rounded-full lg:hidden hover:bg-gray-100">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-4">
+        <div class="flex items-center p-3 bg-primary-50 rounded-lg mb-4">
+          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-10 h-10 rounded-full mr-3">
+          <div>
+            <div class="font-semibold text-gray-800">Dr. Schmidt</div>
+            <div class="text-xs text-primary-600">Online</div>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="mt-2 px-4 space-y-1 text-gray-700">
+        <a href="index.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-home w-5 mr-3 text-gray-500"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="patients.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-user-injured w-5 mr-3 text-gray-500"></i>
+          <span>Patienten</span>
+        </a>
+        <a href="appointments.html" class="flex items-center px-4 py-3 rounded-lg bg-primary-100 text-primary-700 font-medium transition-colors">
+          <i class="fas fa-calendar-alt w-5 mr-3 text-primary-500"></i>
+          <span>Termine</span>
+        </a>
+        <a href="messages.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-comment-alt w-5 mr-3 text-gray-500"></i>
+          <span>Nachrichten</span>
+          <span class="ml-auto bg-primary-500 text-white text-xs px-2 py-1 rounded-full">5</span>
+        </a>
+        <a href="reports.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-chart-line w-5 mr-3 text-gray-500"></i>
+          <span>Berichte</span>
+        </a>
+        <a href="settings.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-cog w-5 mr-3 text-gray-500"></i>
+          <span>Einstellungen</span>
+        </a>
+        <a href="weiterleitung.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-phone-alt w-5 mr-3 text-gray-500"></i>
+          <span>Weiterleitung</span>
+        </a>
+      </nav>
+      
+      <div class="p-4 mt-6">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-4 rounded-xl shadow-md">
+          <h3 class="font-medium mb-1">KI-Anrufbeantworter aktiv</h3>
+          <p class="text-xs text-primary-100">Alle eingehenden Anrufe werden automatisch bearbeitet</p>
+          <div class="mt-3 flex">
+            <div class="text-xs bg-white/20 px-2 py-1 rounded-full">
+              <i class="fas fa-check-circle"></i> Aktiv
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50">
+      <!-- Top Navigation -->
+      <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Terminverwaltung</h1>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100 relative">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <div class="relative">
+            <button class="flex items-center focus:outline-none">
+              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-8 h-8 rounded-full">
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <!-- Appointment Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Termine heute</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">6</h3>
+              </div>
+              <span class="p-2 bg-green-100 text-green-600 rounded-full">
+                <i class="fas fa-calendar-day"></i>
+              </span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Termine diese Woche</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">24</h3>
+              </div>
+              <span class="p-2 bg-blue-100 text-blue-600 rounded-full">
+                <i class="fas fa-calendar-week"></i>
+              </span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">KI-Terminanfragen</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">8</h3>
+              </div>
+              <span class="p-2 bg-amber-100 text-amber-600 rounded-full">
+                <i class="fas fa-robot"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointment Management -->
+        <div class="bg-white rounded-xl shadow-sm mb-6">
+          <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="font-medium text-gray-800">Terminübersicht</h3>
+            <div class="flex space-x-2">
+              <button class="px-4 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-lg">
+                <i class="fas fa-plus mr-1"></i> Neuer Termin
+              </button>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="text-xs text-gray-500 bg-gray-50 uppercase">
+                <tr>
+                  <th class="px-6 py-3">Datum</th>
+                  <th class="px-6 py-3">Zeit</th>
+                  <th class="px-6 py-3">Patient</th>
+                  <th class="px-6 py-3">Typ</th>
+                  <th class="px-6 py-3">Status</th>
+                  <th class="px-6 py-3">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-700 divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">5. Mai 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap">09:00</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-8 h-8 rounded-full mr-2">
+                      <span>Jane Doe</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Untersuchung</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Bestätigt</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-info-circle"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">7. Mai 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap">14:30</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full mr-2">
+                      <span>John Smith</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Beratung</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Geplant</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-info-circle"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 bg-amber-50">
+                  <td class="px-6 py-4 whitespace-nowrap">10. Mai 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap">11:15</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-8 h-8 rounded-full mr-2">
+                      <span>Claudia Müller</span>
+                      <span class="ml-2 text-xs bg-amber-200 px-2 py-0.5 rounded-full text-amber-700">Über KI gebucht</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">Erstgespräch</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-800">Bestätigung ausstehend</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-green-600 hover:text-green-800">
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                      <button class="text-red-600 hover:text-red-800">
+                        <i class="fas fa-times-circle"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="p-4 border-t flex justify-between">
+            <div class="text-sm text-gray-600">Anzeige von 3 von 24 Terminen</div>
+            <div class="flex space-x-1">
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="px-3 py-1 rounded bg-primary-100 text-primary-600">1</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">2</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">3</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Calendar Section -->
+        <div class="bg-white p-5 rounded-xl shadow-sm mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-medium text-gray-800">Wochenübersicht</h3>
+            <div class="flex items-center space-x-2">
+              <button class="text-gray-500 hover:text-gray-700 p-1">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <span class="font-medium">5. Mai - 11. Mai 2023</span>
+              <button class="text-gray-500 hover:text-gray-700 p-1">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <div class="min-w-[800px]">
+              <!-- Calendar Header with days -->
+              <div class="grid grid-cols-8 gap-1 mb-2">
+                <div class="h-10"></div> <!-- Empty corner cell -->
+                <div class="text-center font-medium bg-gray-50 rounded py-2">Montag</div>
+                <div class="text-center font-medium bg-gray-50 rounded py-2">Dienstag</div>
+                <div class="text-center font-medium bg-gray-50 rounded py-2">Mittwoch</div>
+                <div class="text-center font-medium bg-gray-50 rounded py-2">Donnerstag</div>
+                <div class="text-center font-medium bg-primary-50 rounded py-2">Freitag</div>
+                <div class="text-center font-medium bg-blue-50 rounded py-2">Samstag</div>
+                <div class="text-center font-medium bg-blue-50 rounded py-2">Sonntag</div>
+              </div>
+              
+              <!-- Calendar Grid with appointments -->
+              <div class="grid grid-cols-8 gap-1">
+                <!-- Time slots -->
+                <div class="space-y-4 pt-2">
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">8:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">9:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">10:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">11:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">12:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">13:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">14:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">15:00</div>
+                  <div class="h-24 text-xs text-gray-500 text-right pr-2">16:00</div>
+                </div>
+                
+                <!-- Monday -->
+                <div class="relative border rounded bg-gray-50/50">
+                  <div class="absolute top-[96px] left-1 right-1 h-[96px] bg-primary-100 rounded border border-primary-200 p-1 text-xs cursor-pointer hover:bg-primary-200 transition">
+                    <div class="font-medium">Thomas Weber</div>
+                    <div>Kontrolluntersuchung</div>
+                    <div class="mt-1 text-primary-600">10:00 - 11:00</div>
+                  </div>
+                  <div class="absolute top-[288px] left-1 right-1 h-[48px] bg-green-100 rounded border border-green-200 p-1 text-xs cursor-pointer hover:bg-green-200 transition">
+                    <div class="font-medium">Marie Becker</div>
+                    <div>Kurzkonsultation</div>
+                    <div class="mt-1 text-green-600">14:00 - 14:30</div>
+                  </div>
+                </div>
+                
+                <!-- Tuesday -->
+                <div class="relative border rounded bg-gray-50/50">
+                  <div class="absolute top-[48px] left-1 right-1 h-[72px] bg-amber-100 rounded border border-amber-200 p-1 text-xs cursor-pointer hover:bg-amber-200 transition">
+                    <div class="font-medium">Peter Müller</div>
+                    <div>Erstgespräch</div>
+                    <div class="mt-1 text-amber-600">9:00 - 10:00</div>
+                  </div>
+                </div>
+                
+                <!-- Wednesday -->
+                <div class="relative border rounded bg-gray-50/50">
+                  <div class="absolute top-[192px] left-1 right-1 h-[72px] bg-purple-100 rounded border border-purple-200 p-1 text-xs cursor-pointer hover:bg-purple-200 transition">
+                    <div class="font-medium">Sabine Neumann</div>
+                    <div>Labor</div>
+                    <div class="mt-1 text-purple-600">12:00 - 13:00</div>
+                  </div>
+                  <div class="absolute top-[336px] left-1 right-1 h-[96px] bg-primary-100 rounded border border-primary-200 p-1 text-xs cursor-pointer hover:bg-primary-200 transition">
+                    <div class="font-medium">Hans Fischer</div>
+                    <div>Nachkontrolle</div>
+                    <div class="mt-1 text-primary-600">15:00 - 16:00</div>
+                  </div>
+                </div>
+                
+                <!-- Thursday -->
+                <div class="relative border rounded bg-gray-50/50">
+                  <div class="absolute top-[144px] left-1 right-1 h-[48px] bg-green-100 rounded border border-green-200 p-1 text-xs cursor-pointer hover:bg-green-200 transition">
+                    <div class="font-medium">Michael Schmidt</div>
+                    <div>Kurzkonsultation</div>
+                    <div class="mt-1 text-green-600">11:00 - 11:30</div>
+                  </div>
+                </div>
+                
+                <!-- Friday - Current Day -->
+                <div class="relative border-2 border-primary-300 rounded bg-primary-50/30">
+                  <div class="absolute top-0 left-1 right-1 h-[48px] bg-blue-100 rounded border border-blue-200 p-1 text-xs cursor-pointer hover:bg-blue-200 transition">
+                    <div class="font-medium">Jane Doe <span class="bg-blue-200 text-blue-700 px-1 py-0.5 rounded-full text-[9px]">KI</span></div>
+                    <div>Blutabnahme</div>
+                    <div class="mt-1 text-blue-600">8:00 - 8:30</div>
+                  </div>
+                  <div class="absolute top-[144px] left-1 right-1 h-[96px] bg-amber-100 rounded border border-amber-200 p-1 text-xs cursor-pointer hover:bg-amber-200 transition">
+                    <div class="font-medium">Claudia Müller</div>
+                    <div>Erstgespräch</div>
+                    <div class="mt-1 text-amber-600">11:00 - 12:00</div>
+                  </div>
+                  <div class="absolute top-[384px] left-1 right-1 h-[48px] bg-primary-100 rounded border border-primary-200 p-1 text-xs cursor-pointer hover:bg-primary-200 transition">
+                    <div class="font-medium">Karl Lehmann</div>
+                    <div>Kontrolluntersuchung</div>
+                    <div class="mt-1 text-primary-600">16:00 - 16:30</div>
+                  </div>
+                </div>
+                
+                <!-- Saturday - limited hours -->
+                <div class="relative border rounded bg-blue-50/30 h-[240px]">
+                  <div class="absolute top-[48px] left-1 right-1 h-[48px] bg-blue-100 rounded border border-blue-200 p-1 text-xs cursor-pointer hover:bg-blue-200 transition">
+                    <div class="font-medium">Anna Klein <span class="bg-blue-200 text-blue-700 px-1 py-0.5 rounded-full text-[9px]">KI</span></div>
+                    <div>Notfall</div>
+                    <div class="mt-1 text-blue-600">9:00 - 9:30</div>
+                  </div>
+                </div>
+                
+                <!-- Sunday - closed -->
+                <div class="relative border rounded bg-blue-50/30 h-[120px]">
+                  <div class="h-full flex items-center justify-center text-xs text-gray-500">
+                    Geschlossen
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4 flex flex-wrap gap-2">
+            <div class="flex items-center text-xs">
+              <span class="inline-block w-3 h-3 mr-1 bg-primary-100 border border-primary-200 rounded-sm"></span>
+              <span>Kontrolluntersuchung</span>
+            </div>
+            <div class="flex items-center text-xs">
+              <span class="inline-block w-3 h-3 mr-1 bg-green-100 border border-green-200 rounded-sm"></span>
+              <span>Kurzkonsultation</span>
+            </div>
+            <div class="flex items-center text-xs">
+              <span class="inline-block w-3 h-3 mr-1 bg-amber-100 border border-amber-200 rounded-sm"></span>
+              <span>Erstgespräch</span>
+            </div>
+            <div class="flex items-center text-xs">
+              <span class="inline-block w-3 h-3 mr-1 bg-purple-100 border border-purple-200 rounded-sm"></span>
+              <span>Labor</span>
+            </div>
+            <div class="flex items-center text-xs">
+              <span class="inline-block w-3 h-3 mr-1 bg-blue-100 border border-blue-200 rounded-sm"></span>
+              <span>KI-geplante Termine</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
+    
+    document.getElementById('close-sidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

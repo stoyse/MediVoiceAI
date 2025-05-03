@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patienten - MediVoiceAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Mobile Navigation Toggle -->
+    <div class="lg:hidden flex items-center justify-between p-4 bg-white shadow-md">
+      <div class="flex items-center">
+        <i class="fas fa-stethoscope text-primary-600 text-xl mr-2"></i>
+        <span class="font-bold text-xl text-primary-700">MediVoiceAI</span>
+      </div>
+      <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="hidden lg:block lg:w-64 bg-white shadow-lg transform lg:transform-none transition-transform duration-300 ease-in-out lg:relative fixed inset-0 z-40">
+      <div class="flex items-center p-6 border-b">
+        <i class="fas fa-stethoscope text-primary-600 text-2xl mr-3"></i>
+        <div class="text-xl font-bold text-primary-700">MediVoiceAI</div>
+        <button id="close-sidebar" class="ml-auto p-2 rounded-full lg:hidden hover:bg-gray-100">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-4">
+        <div class="flex items-center p-3 bg-primary-50 rounded-lg mb-4">
+          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-10 h-10 rounded-full mr-3">
+          <div>
+            <div class="font-semibold text-gray-800">Dr. Schmidt</div>
+            <div class="text-xs text-primary-600">Online</div>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="mt-2 px-4 space-y-1 text-gray-700">
+        <a href="index.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-home w-5 mr-3 text-gray-500"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="patients.html" class="flex items-center px-4 py-3 rounded-lg bg-primary-100 text-primary-700 font-medium transition-colors">
+          <i class="fas fa-user-injured w-5 mr-3 text-primary-500"></i>
+          <span>Patienten</span>
+        </a>
+        <a href="appointments.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-calendar-alt w-5 mr-3 text-gray-500"></i>
+          <span>Termine</span>
+        </a>
+        <a href="messages.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-comment-alt w-5 mr-3 text-gray-500"></i>
+          <span>Nachrichten</span>
+          <span class="ml-auto bg-primary-500 text-white text-xs px-2 py-1 rounded-full">5</span>
+        </a>
+        <a href="reports.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-chart-line w-5 mr-3 text-gray-500"></i>
+          <span>Berichte</span>
+        </a>
+        <a href="settings.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-cog w-5 mr-3 text-gray-500"></i>
+          <span>Einstellungen</span>
+        </a>
+        <a href="weiterleitung.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-phone-alt w-5 mr-3 text-gray-500"></i>
+          <span>Weiterleitung</span>
+        </a>
+      </nav>
+      
+      <div class="p-4 mt-6">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-4 rounded-xl shadow-md">
+          <h3 class="font-medium mb-1">KI-Anrufbeantworter aktiv</h3>
+          <p class="text-xs text-primary-100">Alle eingehenden Anrufe werden automatisch bearbeitet</p>
+          <div class="mt-3 flex">
+            <div class="text-xs bg-white/20 px-2 py-1 rounded-full">
+              <i class="fas fa-check-circle"></i> Aktiv
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50">
+      <!-- Top Navigation -->
+      <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Patientenverwaltung</h1>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100 relative">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <div class="relative">
+            <button class="flex items-center focus:outline-none">
+              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-8 h-8 rounded-full">
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <!-- Top Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Gesamtzahl Patienten</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">427</h3>
+              </div>
+              <span class="p-2 bg-primary-100 text-primary-600 rounded-full">
+                <i class="fas fa-users"></i>
+              </span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Neue Patienten (Monat)</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">12</h3>
+              </div>
+              <span class="p-2 bg-green-100 text-green-600 rounded-full">
+                <i class="fas fa-user-plus"></i>
+              </span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Anstehende Untersuchungen</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">8</h3>
+              </div>
+              <span class="p-2 bg-amber-100 text-amber-600 rounded-full">
+                <i class="fas fa-stethoscope"></i>
+              </span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">KI-Interaktionen (24h)</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">15</h3>
+              </div>
+              <span class="p-2 bg-blue-100 text-blue-600 rounded-full">
+                <i class="fas fa-robot"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Search and Filter -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+          <div class="flex flex-col md:flex-row md:items-center">
+            <div class="relative flex-1 mb-4 md:mb-0 md:mr-4">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
+              <input type="text" placeholder="Patienten suchen..." class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary-500">
+            </div>
+            
+            <div class="flex space-x-2">
+              <select class="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500">
+                <option>Alle Patienten</option>
+                <option>Chronische Erkrankungen</option>
+                <option>Neugewinnung</option>
+                <option>Aktuelle Termine</option>
+              </select>
+              
+              <button class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 flex items-center">
+                <i class="fas fa-plus mr-2"></i> Neuer Patient
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Patient List -->
+        <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+          <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="font-medium text-gray-800">Patientenliste</h3>
+            <div class="flex items-center text-gray-500 text-sm">
+              <span class="mr-2">Sortieren nach:</span>
+              <select class="border-0 bg-transparent focus:outline-none focus:ring-0 text-primary-600 font-medium">
+                <option>Name</option>
+                <option>Datum (Neueste)</option>
+                <option>Datum (Älteste)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="text-xs text-gray-500 bg-gray-50 uppercase">
+                <tr>
+                  <th class="px-6 py-3 text-left">Patient</th>
+                  <th class="px-6 py-3 text-left">Geburtsdatum</th>
+                  <th class="px-6 py-3 text-left">Diagnose</th>
+                  <th class="px-6 py-3 text-left">Letzter Besuch</th>
+                  <th class="px-6 py-3 text-left">Status</th>
+                  <th class="px-6 py-3 text-left">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-8 h-8 rounded-full mr-3">
+                      <div>
+                        <div class="font-medium">Jane Doe</div>
+                        <div class="text-gray-500 text-xs">jdoe@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">10.05.1975</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs">Diabetes</span>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">Heute</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Aktiv</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-gray-600 hover:text-gray-800"><i class="fas fa-eye"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-edit"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-comment"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full mr-3">
+                      <div>
+                        <div class="font-medium">John Smith</div>
+                        <div class="text-gray-500 text-xs">jsmith@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">22.11.1982</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Asthma</span>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">Gestern</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Aktiv</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-gray-600 hover:text-gray-800"><i class="fas fa-eye"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-edit"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-comment"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-8 h-8 rounded-full mr-3">
+                      <div>
+                        <div class="font-medium">Claudia Müller</div>
+                        <div class="text-gray-500 text-xs">cmuller@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">03.08.1990</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Hypertonie</span>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">15.06.2023</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs">Überprüfung nötig</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-gray-600 hover:text-gray-800"><i class="fas fa-eye"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-edit"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-comment"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 bg-blue-50">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/men/55.jpg" class="w-8 h-8 rounded-full mr-3">
+                      <div>
+                        <div class="font-medium">Michael Weber</div>
+                        <div class="text-gray-500 text-xs">mweber@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">17.03.1965</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">Arthritis</span>
+                  </td>
+                  <td class="px-6 py-4 text-gray-600">Heute</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs flex items-center">
+                        <i class="fas fa-phone-alt mr-1"></i> KI-Kontakt
+                      </span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-gray-600 hover:text-gray-800"><i class="fas fa-eye"></i></button>
+                      <button class="text-primary-600 hover:text-primary-800"><i class="fas fa-edit"></i></button>
+                      <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-headset"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="p-4 border-t flex justify-between items-center">
+            <div class="text-sm text-gray-600">Anzeige von 4 von 427 Patienten</div>
+            <div class="flex space-x-1">
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="px-3 py-1 rounded bg-primary-100 text-primary-600">1</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">2</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">3</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">...</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">43</button>
+              <button class="px-3 py-1 rounded text-gray-600 hover:bg-gray-100">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Patient KI-Interaktionen -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-xl shadow-sm">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-primary-100 rounded-full mr-3">
+                <i class="fas fa-robot text-primary-600"></i>
+              </div>
+              <h3 class="font-medium text-gray-800">KI-Interaktionen mit Patienten</h3>
+            </div>
+            
+            <div class="space-y-3">
+              <div class="p-3 rounded-lg border border-gray-100 hover:bg-gray-50">
+                <div class="flex justify-between items-start mb-1">
+                  <div class="font-medium">Michael Weber</div>
+                  <span class="text-xs text-gray-500">Heute, 08:45</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-1">Anfrage nach Rezepterneuerung für Blutdruckmedikamente</p>
+                <div class="flex items-center justify-between text-xs">
+                  <div>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">KI bearbeitet</span>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full ml-1">Genehmigt</span>
+                  </div>
+                  <button class="text-primary-600 hover:text-primary-800">Details</button>
+                </div>
+              </div>
+              
+              <div class="p-3 rounded-lg border border-gray-100 hover:bg-gray-50">
+                <div class="flex justify-between items-start mb-1">
+                  <div class="font-medium">Anna Schmidt</div>
+                  <span class="text-xs text-gray-500">Gestern, 17:30</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-1">Vereinbarung eines Termins zur jährlichen Untersuchung</p>
+                <div class="flex items-center justify-between text-xs">
+                  <div>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">KI bearbeitet</span>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full ml-1">Termin bestätigt</span>
+                  </div>
+                  <button class="text-primary-600 hover:text-primary-800">Details</button>
+                </div>
+              </div>
+              
+              <div class="p-3 rounded-lg border border-gray-100 hover:bg-gray-50">
+                <div class="flex justify-between items-start mb-1">
+                  <div class="font-medium">Peter Klein</div>
+                  <span class="text-xs text-gray-500">Gestern, 10:15</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-1">Frage zu Nebenwirkungen der verschriebenen Medikation</p>
+                <div class="flex items-center justify-between text-xs">
+                  <div>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">KI bearbeitet</span>
+                    <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full ml-1">An Arzt weitergeleitet</span>
+                  </div>
+                  <button class="text-primary-600 hover:text-primary-800">Details</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 text-center">
+              <button class="text-primary-600 hover:text-primary-800 text-sm">
+                Alle KI-Interaktionen anzeigen
+              </button>
+            </div>
+          </div>
+          
+          <div class="bg-white p-6 rounded-xl shadow-sm">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-primary-100 rounded-full mr-3">
+                <i class="fas fa-user-md text-primary-600"></i>
+              </div>
+              <h3 class="font-medium text-gray-800">Patientenmanagement</h3>
+            </div>
+            
+            <div class="space-y-4">
+              <div class="flex items-center p-4 bg-primary-50 rounded-lg">
+                <div class="p-3 bg-primary-100 rounded-full mr-4">
+                  <i class="fas fa-clipboard-list text-primary-600"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">KI-Patientenüberwachung</h4>
+                  <p class="text-sm text-gray-600">Aktivieren Sie die automatische Überwachung von Patientenwerten und -zuständen</p>
+                  <button class="mt-2 bg-primary-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-primary-700">
+                    Jetzt konfigurieren
+                  </button>
+                </div>
+              </div>
+              
+              <div class="border-t pt-4">
+                <h4 class="font-medium mb-3">Schnelle Aktionen</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <button class="p-3 border rounded-lg text-left hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-file-medical text-primary-600 mr-2"></i>
+                    <span>Neue Patientenakte</span>
+                  </button>
+                  <button class="p-3 border rounded-lg text-left hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-file-import text-primary-600 mr-2"></i>
+                    <span>Daten importieren</span>
+                  </button>
+                  <button class="p-3 border rounded-lg text-left hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-file-export text-primary-600 mr-2"></i>
+                    <span>Patientenliste exportieren</span>
+                  </button>
+                  <button class="p-3 border rounded-lg text-left hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-envelope-open-text text-primary-600 mr-2"></i>
+                    <span>Benachrichtigung senden</span>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="border-t pt-4">
+                <h4 class="font-medium mb-2">Kommende Geburtstage</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between p-2 border-b">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/women/23.jpg" class="w-6 h-6 rounded-full mr-2">
+                      <span>Sabine Neumann</span>
+                    </div>
+                    <span class="text-sm text-gray-500">Morgen</span>
+                  </div>
+                  <div class="flex items-center justify-between p-2 border-b">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/men/47.jpg" class="w-6 h-6 rounded-full mr-2">
+                      <span>Thomas Becker</span>
+                    </div>
+                    <span class="text-sm text-gray-500">In 3 Tagen</span>
+                  </div>
+                  <div class="flex items-center justify-between p-2">
+                    <div class="flex items-center">
+                      <img src="https://randomuser.me/api/portraits/women/35.jpg" class="w-6 h-6 rounded-full mr-2">
+                      <span>Marie Fischer</span>
+                    </div>
+                    <span class="text-sm text-gray-500">In 5 Tagen</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
+    
+    document.getElementById('close-sidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

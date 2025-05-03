@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weiterleitung - MediVoiceAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Mobile Navigation Toggle -->
+    <div class="lg:hidden flex items-center justify-between p-4 bg-white shadow-md">
+      <div class="flex items-center">
+        <i class="fas fa-stethoscope text-primary-600 text-xl mr-2"></i>
+        <span class="font-bold text-xl text-primary-700">MediVoiceAI</span>
+      </div>
+      <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="hidden lg:block lg:w-64 bg-white shadow-lg transform lg:transform-none transition-transform duration-300 ease-in-out lg:relative fixed inset-0 z-40">
+      <div class="flex items-center p-6 border-b">
+        <i class="fas fa-stethoscope text-primary-600 text-2xl mr-3"></i>
+        <div class="text-xl font-bold text-primary-700">MediVoiceAI</div>
+        <button id="close-sidebar" class="ml-auto p-2 rounded-full lg:hidden hover:bg-gray-100">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-4">
+        <div class="flex items-center p-3 bg-primary-50 rounded-lg mb-4">
+          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-10 h-10 rounded-full mr-3">
+          <div>
+            <div class="font-semibold text-gray-800">Dr. Schmidt</div>
+            <div class="text-xs text-primary-600">Online</div>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="mt-2 px-4 space-y-1 text-gray-700">
+        <a href="index.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-home w-5 mr-3 text-gray-500"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="patients.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-user-injured w-5 mr-3 text-gray-500"></i>
+          <span>Patienten</span>
+        </a>
+        <a href="appointments.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-calendar-alt w-5 mr-3 text-gray-500"></i>
+          <span>Termine</span>
+        </a>
+        <a href="messages.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-comment-alt w-5 mr-3 text-gray-500"></i>
+          <span>Nachrichten</span>
+          <span class="ml-auto bg-primary-500 text-white text-xs px-2 py-1 rounded-full">5</span>
+        </a>
+        <a href="reports.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-chart-line w-5 mr-3 text-gray-500"></i>
+          <span>Berichte</span>
+        </a>
+        <a href="settings.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-cog w-5 mr-3 text-gray-500"></i>
+          <span>Einstellungen</span>
+        </a>
+        <a href="weiterleitung.html" class="flex items-center px-4 py-3 rounded-lg bg-primary-100 text-primary-700 font-medium transition-colors">
+          <i class="fas fa-phone-alt w-5 mr-3 text-primary-500"></i>
+          <span>Weiterleitung</span>
+        </a>
+      </nav>
+      
+      <div class="p-4 mt-6">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-4 rounded-xl shadow-md">
+          <h3 class="font-medium mb-1">KI-Anrufbeantworter aktiv</h3>
+          <p class="text-xs text-primary-100">Alle eingehenden Anrufe werden automatisch bearbeitet</p>
+          <div class="mt-3 flex">
+            <div class="text-xs bg-white/20 px-2 py-1 rounded-full">
+              <i class="fas fa-check-circle"></i> Aktiv
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50">
+      <!-- Top Navigation -->
+      <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Weiterleitung komplexer Anfragen</h1>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100 relative">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <div class="relative">
+            <button class="flex items-center focus:outline-none">
+              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-8 h-8 rounded-full">
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <!-- Main Info Card -->
+        <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Intelligente Weiterleitungsverwaltung</h2>
+          <p class="text-gray-700 mb-4">
+            Bei komplexeren Anliegen oder medizinischen Notfällen stellt MediVoiceAI sicher, dass Anrufe
+            direkt an das zuständige Praxispersonal oder an entsprechende Notdienste weitergeleitet werden.
+          </p>
+          
+          <div class="bg-primary-50 border-l-4 border-primary-400 p-4 text-primary-800 rounded mb-4">
+            <p class="font-medium">Hinweis:</p>
+            <p>Diese Funktion dient der schnellen Reaktion auf dringende Patientenanfragen und verbessert die Erreichbarkeit außerhalb der regulären Öffnungszeiten.</p>
+          </div>
+        </div>
+        
+        <!-- Weiterleitung Settings -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white p-6 rounded-xl shadow-sm">
+            <div class="flex items-center mb-4">
+              <div class="p-3 bg-red-100 rounded-full mr-4">
+                <i class="fas fa-ambulance text-red-600 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-medium text-lg text-gray-800">Notfallkontakte</h3>
+                <p class="text-gray-500 text-sm">Für akute medizinische Notfälle</p>
+              </div>
+            </div>
+            
+            <div class="space-y-4 mt-6">
+              <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <div class="p-2 bg-red-100 rounded-full mr-3">
+                  <i class="fas fa-phone-alt text-red-600"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Notrufnummer</p>
+                  <p class="font-medium">112</p>
+                  <p class="text-xs text-gray-500 mt-1">Nur bei akuten lebensbedrohlichen Notfällen</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <div class="p-2 bg-blue-100 rounded-full mr-3">
+                  <i class="fas fa-user-md text-blue-600"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Ärztlicher Bereitschaftsdienst</p>
+                  <p class="font-medium">116 117</p>
+                  <p class="text-xs text-gray-500 mt-1">Bei dringenden medizinischen Anliegen außerhalb der Sprechzeiten</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <div class="p-2 bg-primary-100 rounded-full mr-3">
+                  <i class="fas fa-clinic-medical text-primary-600"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Praxis-Hotline</p>
+                  <p class="font-medium">0800 123 4567</p>
+                  <p class="text-xs text-gray-500 mt-1">Während und außerhalb der Sprechzeiten</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+            <div class="flex items-center mb-6">
+              <div class="p-3 bg-primary-100 rounded-full mr-4">
+                <i class="fas fa-robot text-primary-600 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-medium text-lg text-gray-800">KI-Weiterleitungskonfiguration</h3>
+                <p class="text-gray-500 text-sm">Legen Sie fest, wann und wie Anrufe weitergeleitet werden sollen</p>
+              </div>
+            </div>
+            
+            <div class="space-y-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-medium text-gray-700">Automatische Weiterleitung aktivieren</h4>
+                  <p class="text-sm text-gray-500">KI erkennt dringende Notfälle und leitet diese sofort weiter</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" checked>
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                </label>
+              </div>
+              
+              <hr>
+              
+              <div>
+                <h4 class="font-medium text-gray-700 mb-3">Schlagwörter für Weiterleitung</h4>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs flex items-center">
+                    Notfall <button class="ml-1 text-red-600 hover:text-red-800"><i class="fas fa-times"></i></button>
+                  </span>
+                  <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs flex items-center">
+                    Schmerzen <button class="ml-1 text-red-600 hover:text-red-800"><i class="fas fa-times"></i></button>
+                  </span>
+                  <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs flex items-center">
+                    Unfall <button class="ml-1 text-orange-600 hover:text-orange-800"><i class="fas fa-times"></i></button>
+                  </span>
+                  <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs flex items-center">
+                    Atemnot <button class="ml-1 text-orange-600 hover:text-orange-800"><i class="fas fa-times"></i></button>
+                  </span>
+                  <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs flex items-center">
+                    Fieber <button class="ml-1 text-yellow-600 hover:text-yellow-800"><i class="fas fa-times"></i></button>
+                  </span>
+                </div>
+                
+                <div class="flex mt-2">
+                  <input type="text" placeholder="Neues Schlagwort hinzufügen..." class="border rounded-l-md px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-primary-500">
+                  <button class="bg-primary-600 text-white px-4 py-2 rounded-r-md hover:bg-primary-700">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <hr>
+              
+              <div class="space-y-4">
+                <h4 class="font-medium text-gray-700">Weiterleitungsregeln</h4>
+                
+                <div class="border rounded-lg p-4 bg-gray-50">
+                  <div class="flex justify-between items-center mb-3">
+                    <h5 class="font-medium">Regel #1: Notfälle</h5>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked>
+                      <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600"></div>
+                    </label>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-2">Bei Erkennung von Schlüsselwörtern mit hoher Priorität</p>
+                  <div class="flex justify-between text-xs text-gray-500">
+                    <span>Weiterleitung an: <span class="font-medium">Notrufnummer (112)</span></span>
+                    <a href="#" class="text-primary-600 hover:text-primary-800">Bearbeiten</a>
+                  </div>
+                </div>
+                
+                <div class="border rounded-lg p-4 bg-gray-50">
+                  <div class="flex justify-between items-center mb-3">
+                    <h5 class="font-medium">Regel #2: Dringende Anfragen</h5>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked>
+                      <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600"></div>
+                    </label>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-2">Bei Erkennung von Schlüsselwörtern mit mittlerer Priorität</p>
+                  <div class="flex justify-between text-xs text-gray-500">
+                    <span>Weiterleitung an: <span class="font-medium">Bereitschaftsarzt (116 117)</span></span>
+                    <a href="#" class="text-primary-600 hover:text-primary-800">Bearbeiten</a>
+                  </div>
+                </div>
+                
+                <div class="border rounded-lg p-4 bg-gray-50">
+                  <div class="flex justify-between items-center mb-3">
+                    <h5 class="font-medium">Regel #3: Außerhalb der Sprechzeiten</h5>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked>
+                      <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600"></div>
+                    </label>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-2">Bei Anrufen außerhalb der Praxisöffnungszeiten</p>
+                  <div class="flex justify-between text-xs text-gray-500">
+                    <span>Weiterleitung an: <span class="font-medium">Praxis-Anrufbeantworter</span></span>
+                    <a href="#" class="text-primary-600 hover:text-primary-800">Bearbeiten</a>
+                  </div>
+                </div>
+                
+                <button class="mt-4 flex items-center text-primary-600 hover:text-primary-800">
+                  <i class="fas fa-plus-circle mr-2"></i> Neue Regel hinzufügen
+                </button>
+              </div>
+              
+              <div class="pt-4">
+                <button class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
+                  Einstellungen speichern
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- History and Analytics -->
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="font-medium text-lg text-gray-800 mb-4">Weiterleitungsstatistik</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="border rounded-lg p-4">
+              <h4 class="text-sm text-gray-500">Weiterleitungen heute</h4>
+              <p class="text-2xl font-semibold text-gray-800">3</p>
+              <div class="flex items-center mt-1 text-xs">
+                <span class="text-green-600 flex items-center"><i class="fas fa-arrow-down mr-1"></i> 25%</span>
+                <span class="text-gray-500 ml-2">gegenüber gestern</span>
+              </div>
+            </div>
+            
+            <div class="border rounded-lg p-4">
+              <h4 class="text-sm text-gray-500">Weiterleitungen diese Woche</h4>
+              <p class="text-2xl font-semibold text-gray-800">12</p>
+              <div class="flex items-center mt-1 text-xs">
+                <span class="text-red-600 flex items-center"><i class="fas fa-arrow-up mr-1"></i> 10%</span>
+                <span class="text-gray-500 ml-2">gegenüber letzter Woche</span>
+              </div>
+            </div>
+            
+            <div class="border rounded-lg p-4">
+              <h4 class="text-sm text-gray-500">Automatisierungsgrad</h4>
+              <p class="text-2xl font-semibold text-gray-800">85%</p>
+              <div class="flex items-center mt-1 text-xs">
+                <span class="text-green-600 flex items-center"><i class="fas fa-arrow-up mr-1"></i> 5%</span>
+                <span class="text-gray-500 ml-2">gegenüber letztem Monat</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="border-t pt-4">
+            <h4 class="font-medium text-gray-700 mb-3">Letzte Weiterleitungen</h4>
+            
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 text-left">Datum</th>
+                    <th class="px-4 py-2 text-left">Patient</th>
+                    <th class="px-4 py-2 text-left">Grund</th>
+                    <th class="px-4 py-2 text-left">Weitergeleitet an</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y">
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">Heute, 10:23</td>
+                    <td class="px-4 py-3">Martina Weber</td>
+                    <td class="px-4 py-3">Starke Brustschmerzen</td>
+                    <td class="px-4 py-3">Notruf (112)</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Abgeschlossen</span></td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">Gestern, 15:47</td>
+                    <td class="px-4 py-3">Peter Müller</td>
+                    <td class="px-4 py-3">Anhaltende Kopfschmerzen</td>
+                    <td class="px-4 py-3">Bereitschaftsarzt</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Abgeschlossen</span></td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">Gestern, 08:15</td>
+                    <td class="px-4 py-3">Sarah Becker</td>
+                    <td class="px-4 py-3">Außerhalb der Sprechzeiten</td>
+                    <td class="px-4 py-3">Praxis-Anrufbeantworter</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Termin vereinbart</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="mt-4 text-center">
+              <button class="text-primary-600 hover:text-primary-800 text-sm">
+                Alle Weiterleitungen anzeigen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
+    
+    document.getElementById('close-sidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Berichte - MediVoiceAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Mobile Navigation Toggle -->
+    <div class="lg:hidden flex items-center justify-between p-4 bg-white shadow-md">
+      <div class="flex items-center">
+        <i class="fas fa-stethoscope text-primary-600 text-xl mr-2"></i>
+        <span class="font-bold text-xl text-primary-700">MediVoiceAI</span>
+      </div>
+      <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="hidden lg:block lg:w-64 bg-white shadow-lg transform lg:transform-none transition-transform duration-300 ease-in-out lg:relative fixed inset-0 z-40">
+      <div class="flex items-center p-6 border-b">
+        <i class="fas fa-stethoscope text-primary-600 text-2xl mr-3"></i>
+        <div class="text-xl font-bold text-primary-700">MediVoiceAI</div>
+        <button id="close-sidebar" class="ml-auto p-2 rounded-full lg:hidden hover:bg-gray-100">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-4">
+        <div class="flex items-center p-3 bg-primary-50 rounded-lg mb-4">
+          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-10 h-10 rounded-full mr-3">
+          <div>
+            <div class="font-semibold text-gray-800">Dr. Schmidt</div>
+            <div class="text-xs text-primary-600">Online</div>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="mt-2 px-4 space-y-1 text-gray-700">
+        <a href="index.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-home w-5 mr-3 text-gray-500"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="patients.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-user-injured w-5 mr-3 text-gray-500"></i>
+          <span>Patienten</span>
+        </a>
+        <a href="appointments.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-calendar-alt w-5 mr-3 text-gray-500"></i>
+          <span>Termine</span>
+        </a>
+        <a href="messages.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-comment-alt w-5 mr-3 text-gray-500"></i>
+          <span>Nachrichten</span>
+          <span class="ml-auto bg-primary-500 text-white text-xs px-2 py-1 rounded-full">5</span>
+        </a>
+        <a href="reports.html" class="flex items-center px-4 py-3 rounded-lg bg-primary-100 text-primary-700 font-medium transition-colors">
+          <i class="fas fa-chart-line w-5 mr-3 text-primary-500"></i>
+          <span>Berichte</span>
+        </a>
+        <a href="settings.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-cog w-5 mr-3 text-gray-500"></i>
+          <span>Einstellungen</span>
+        </a>
+        <a href="weiterleitung.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-primary-50 transition-colors">
+          <i class="fas fa-phone-alt w-5 mr-3 text-gray-500"></i>
+          <span>Weiterleitung</span>
+        </a>
+      </nav>
+      
+      <div class="p-4 mt-6">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-4 rounded-xl shadow-md">
+          <h3 class="font-medium mb-1">KI-Anrufbeantworter aktiv</h3>
+          <p class="text-xs text-primary-100">Alle eingehenden Anrufe werden automatisch bearbeitet</p>
+          <div class="mt-3 flex">
+            <div class="text-xs bg-white/20 px-2 py-1 rounded-full">
+              <i class="fas fa-check-circle"></i> Aktiv
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50">
+      <!-- Top Navigation -->
+      <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <h1 class="text-xl font-semibold text-gray-800">Berichte & Auswertungen</h1>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="p-2 rounded-full text-gray-500 hover:bg-gray-100 relative">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+          <div class="relative">
+            <button class="flex items-center focus:outline-none">
+              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Schmidt" class="w-8 h-8 rounded-full">
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">KI-Nutzungseffizienz</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">94%</h3>
+              </div>
+              <span class="p-2 bg-green-100 text-green-600 rounded-full">
+                <i class="fas fa-robot"></i>
+              </span>
+            </div>
+            <div class="flex items-center mt-4">
+              <span class="text-green-500 text-xs font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> 7%
+              </span>
+              <span class="text-xs text-gray-500 ml-2">gegenüber letztem Monat</span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Zeitersparnis</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">28h/Woche</h3>
+              </div>
+              <span class="p-2 bg-blue-100 text-blue-600 rounded-full">
+                <i class="fas fa-clock"></i>
+              </span>
+            </div>
+            <div class="flex items-center mt-4">
+              <span class="text-blue-500 text-xs font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> 12%
+              </span>
+              <span class="text-xs text-gray-500 ml-2">gegenüber letztem Quartal</span>
+            </div>
+          </div>
+          
+          <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Patientenzufriedenheit</p>
+                <h3 class="mt-1 text-2xl font-semibold text-gray-800">4.8/5</h3>
+              </div>
+              <span class="p-2 bg-amber-100 text-amber-600 rounded-full">
+                <i class="fas fa-star"></i>
+              </span>
+            </div>
+            <div class="flex items-center mt-4">
+              <span class="text-amber-500 text-xs font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> 0.3
+              </span>
+              <span class="text-xs text-gray-500 ml-2">gegenüber Vorjahr</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Filters -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+          <div class="flex flex-wrap items-center gap-4">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Zeitraum</label>
+              <select class="border rounded-md px-3 py-2 bg-gray-50 text-sm">
+                <option>Letzte 30 Tage</option>
+                <option>Letzte 3 Monate</option>
+                <option>Dieses Jahr</option>
+                <option>Benutzerdefiniert</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Berichtstyp</label>
+              <select class="border rounded-md px-3 py-2 bg-gray-50 text-sm">
+                <option>KI-Leistungsübersicht</option>
+                <option>Anrufanalyse</option>
+                <option>Patienteninteraktionen</option>
+                <option>Terminmanagement</option>
+              </select>
+            </div>
+            
+            <div class="ml-auto">
+              <button class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 text-sm">
+                <i class="fas fa-file-export mr-1"></i> Bericht erstellen
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Charts -->
+        <div class="grid grid-cols-1 gap-6 mb-6">
+          <div class="bg-white p-5 rounded-xl shadow-sm">
+            <h3 class="font-medium text-gray-800 mb-4">KI-Anrufmanagement Übersicht</h3>
+            <div class="h-80">
+              <canvas id="monthlyPerformanceChart"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white p-5 rounded-xl shadow-sm">
+            <h3 class="font-medium text-gray-800 mb-4">Anrufauflösung nach Kategorie</h3>
+            <div class="h-64">
+              <canvas id="callResolutionChart"></canvas>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-xl shadow-sm">
+            <h3 class="font-medium text-gray-800 mb-4">Top Anfragegründe</h3>
+            <div class="h-64">
+              <canvas id="topRequestsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Reports Table -->
+        <div class="bg-white rounded-xl shadow-sm mb-6">
+          <div class="p-4 border-b">
+            <h3 class="font-medium text-gray-800">Verfügbare Berichte</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="text-xs text-gray-500 bg-gray-50 uppercase">
+                <tr>
+                  <th class="px-6 py-3">Berichtsname</th>
+                  <th class="px-6 py-3">Typ</th>
+                  <th class="px-6 py-3">Zeitraum</th>
+                  <th class="px-6 py-3">Erstellt am</th>
+                  <th class="px-6 py-3">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-700 divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">Monatsbericht Mai 2023</td>
+                  <td class="px-6 py-4">KI-Performance</td>
+                  <td class="px-6 py-4">01.05. - 31.05.2023</td>
+                  <td class="px-6 py-4">01.06.2023</td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">Patientenzufriedenheit Q2</td>
+                  <td class="px-6 py-4">Feedback</td>
+                  <td class="px-6 py-4">01.04. - 30.06.2023</td>
+                  <td class="px-6 py-4">02.07.2023</td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">Praxisauslastung 2023</td>
+                  <td class="px-6 py-4">Ressourcen</td>
+                  <td class="px-6 py-4">01.01. - 30.06.2023</td>
+                  <td class="px-6 py-4">05.07.2023</td>
+                  <td class="px-6 py-4">
+                    <div class="flex space-x-2">
+                      <button class="text-primary-600 hover:text-primary-800">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
+    
+    document.getElementById('close-sidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.add('hidden');
+    });
+    
+    // Monthly Performance Chart
+    const monthlyPerformanceChart = new Chart(
+      document.getElementById('monthlyPerformanceChart'),
+      {
+        type: 'bar',
+        data: {
+          labels: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'],
+          datasets: [
+            {
+              label: 'Automatisch bearbeitete Anrufe',
+              data: [280, 320, 380, 430, 510, 590],
+              backgroundColor: '#0ea5e9',
+              order: 2
+            },
+            {
+              label: 'Effizienzrate',
+              data: [75, 78, 82, 87, 92, 94],
+              borderColor: '#f97316',
+              backgroundColor: 'rgba(249, 115, 22, 0.2)',
+              type: 'line',
+              yAxisID: 'y1',
+              order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Anrufvolumen'
+              }
+            },
+            y1: {
+              beginAtZero: true,
+              position: 'right',
+              title: {
+                display: true,
+                text: 'Effizienzrate (%)'
+              },
+              min: 0,
+              max: 100,
+              grid: {
+                drawOnChartArea: false
+              }
+            }
+          }
+        }
+      }
+    );
+    
+    // Call Resolution Chart
+    const callResolutionChart = new Chart(
+      document.getElementById('callResolutionChart'),
+      {
+        type: 'pie',
+        data: {
+          labels: ['Vollständig automatisiert', 'Mit KI-Unterstützung gelöst', 'An Praxispersonal weitergeleitet'],
+          datasets: [{
+            data: [65, 25, 10],
+            backgroundColor: ['#0ea5e9', '#f97316', '#d1d5db']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      }
+    );
+    
+    // Top Requests Chart
+    const topRequestsChart = new Chart(
+      document.getElementById('topRequestsChart'),
+      {
+        type: 'horizontalBar',
+        type: 'bar',
+        data: {
+          labels: ['Terminanfragen', 'Öffnungszeiten', 'Rezepterneuerung', 'Befundabfragen', 'Überweisungen'],
+          datasets: [{
+            axis: 'y',
+            label: 'Häufigkeit',
+            data: [42, 28, 18, 8, 4],
+            backgroundColor: [
+              'rgba(14, 165, 233, 0.8)',
+              'rgba(14, 165, 233, 0.6)',
+              'rgba(14, 165, 233, 0.4)',
+              'rgba(14, 165, 233, 0.3)',
+              'rgba(14, 165, 233, 0.2)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      }
+    );
+  </script>
+</body>
+</html>
